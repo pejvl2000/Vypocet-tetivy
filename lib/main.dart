@@ -107,59 +107,60 @@ class _ArcCalculatorScreenState extends State<ArcCalculatorScreen> {
   }
 
   @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text("Výpočet oblouku", style: TextStyle(color: Colors.white)),
-        backgroundColor: Colors.green,
-      ),
-      body: Column(
-        children: [
-          Expanded(
-            child: ListView(
-              padding: const EdgeInsets.all(16),
-              children: [
-                _buildRow("Délka tětivy (L)", _lController, CalculationMode.L),
-                const Divider(),
-                _buildRow("Výška vzepětí (h)", _hController, CalculationMode.h),
-                const Divider(),
-                _buildRow("Poloměr (R)", _rController, CalculationMode.r),
-                
-                const SizedBox(height: 30),
-                Align(
-                  alignment: Alignment.centerRight,
-                  child: ElevatedButton(
-                    onPressed: () {
-                      _lController.clear();
-                      _hController.clear();
-                      _rController.clear();
-                      setState(() {
-                        _arcLength = 0.0;
-                        _arcAngle = 0.0;
-                      });
-                    },
-                    child: const Text("Smazat"),
-                  ),
-                ),
-                const Divider(thickness: 2), // Silnější čára pro oddělení
-                const Padding(
-                  padding: EdgeInsets.symmetric(vertical: 10),
-                  child: Text("Doplňkové údaje:", style: TextStyle(color: Colors.grey, fontWeight: FontWeight.bold)),
-                ),
-                _buildReadOnlyRow("Délka oblouku (S)", _arcLength.toStringAsFixed(2).replaceFirst('.', ','), "mm"),
-                _buildReadOnlyRow("Středový úhel (φ)", _arcAngle.toStringAsFixed(1).replaceFirst('.', ','), "°"),
-              ],
-            ),
+Widget build(BuildContext context) {
+  return Scaffold(
+    appBar: AppBar(
+      title: const Text("Výpočet oblouku", style: TextStyle(color: Colors.white)),
+      backgroundColor: Colors.green,
+    ),
+    // Odstranili jsme Column a Expanded
+    body: ListView(
+      padding: const EdgeInsets.all(16),
+      children: [
+        _buildRow("Délka tětivy (L)", _lController, CalculationMode.L),
+        const Divider(),
+        _buildRow("Výška vzepětí (h)", _hController, CalculationMode.h),
+        const Divider(),
+        _buildRow("Poloměr (R)", _rController, CalculationMode.r),
+        
+        const SizedBox(height: 30),
+        Align(
+          alignment: Alignment.centerRight,
+          child: ElevatedButton(
+            onPressed: () {
+              _lController.clear();
+              _hController.clear();
+              _rController.clear();
+              setState(() {
+                _arcLength = 0.0;
+                _arcAngle = 0.0;
+              });
+            },
+            child: const Text("Smazat"),
           ),
-          Container(
-            padding: const EdgeInsets.all(20),
-            height: 400,
-            child: Image.asset('assets/Nakres.png', errorBuilder: (context, error, stackTrace) => const Placeholder()),
+        ),
+        const Divider(thickness: 2),
+        const Padding(
+          padding: EdgeInsets.symmetric(vertical: 10),
+          child: Text("Doplňkové údaje:", style: TextStyle(color: Colors.grey, fontWeight: FontWeight.bold)),
+        ),
+        _buildReadOnlyRow("Délka oblouku (S)", _arcLength.toStringAsFixed(2).replaceFirst('.', ','), "mm"),
+        _buildReadOnlyRow("Středový úhel (φ)", _arcAngle.toStringAsFixed(1).replaceFirst('.', ','), "°"),
+        
+        // --- OBRÁZEK JE TEĎ TADY ---
+        const SizedBox(height: 20), // Mezera mezi textem a obrázkem
+        Center(
+          child: Image.asset(
+            'assets/Nakres.png', 
+            height: 300, 
+            fit: BoxFit.contain, // Změněno z "Dil.contain" na "BoxFit.contain"
+            errorBuilder: (context, error, stackTrace) => const Icon(Icons.image_not_supported, size: 100, color: Colors.grey),
           ),
-        ],
-      ),
-    );
-  }
+        ),
+      ],
+    ),
+  );
+}
 
   Widget _buildRow(String label, TextEditingController controller, CalculationMode rowMode) {
     bool isResult = _mode == rowMode;
